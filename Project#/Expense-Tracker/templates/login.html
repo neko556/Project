@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="login container text-white">
+    {% from "includes/_formhelpers.html" import render_field %}
+    <h2 class="text-center mb-4">Login to Your Account</h2>
+    <form action="" method="post" class="bg-dark p-4 rounded shadow">
+        <div class="form-group">
+            {{ render_field(form.username, class_="form-control form-control-lg", placeholder="Username") }}
+        </div>
+        <div class="form-group">
+            {{ render_field(form.password, class_="form-control form-control-lg", placeholder="Password") }}
+        </div>
+        <div class="enter text-center">
+            <input class="btn btn-info btn-block" type="submit" value="Login" />
+            <h5 class="forgot mt-3"><a href="{{ url_for('reset_request') }}" class="green-text link">Forgot Password?</a></h5>
+        </div>
+    </form>
+    <p class="text-center mt-3">Don't have an account? <a class="green-text hover" href="/signup">Sign Up</a></p>
+</div>
+
+<style>
+    .login {
+        animation: fadeIn 0.8s ease-in-out; /* Fade-in effect for the form */
+        max-width: 400px; /* Limit the width of the container */
+        margin: auto; /* Center the container */
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .form-control {
+        height: 45px; /* Shorter input fields */
+        font-size: 16px; /* Larger text for better readability */
+    }
+
+    .btn-info {
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-info:hover {
+        background-color: #00b894; /* Bright color on hover */
+    }
+
+    .hover {
+        color: #00b894;
+        text-decoration: none;
+    }
+
+    .hover:hover {
+        text-decoration: underline;
+    }
+
+    .forgot {
+        margin-top: 10px; /* Space above the forgot password link */
+    }
+</style>
+{% endblock %}

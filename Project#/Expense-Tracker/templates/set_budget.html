@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+  <div class="container">
+    <h2>Track Your Budget</h2>
+
+    <!-- Directly display the budget form without condition -->
+    <h3>You have not set a budget yet</h3>
+    <p>Please set your monthly budget and savings goal:</p>
+    <form method="POST">
+      <div class="form-group">
+        <label for="monthly_budget">Monthly Budget</label>
+        <input type="number" class="form-control" id="monthly_budget" name="monthly_budget" required>
+      </div>
+      <div class="form-group">
+        <label for="monthly_savings_goal">Monthly Savings Goal</label>
+        <input type="number" class="form-control" id="monthly_savings_goal" name="monthly_savings_goal" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Save Budget</button>
+    </form>
+  </div>
+
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+
+    p {
+      font-size: 18px;
+    }
+  </style>
+{% endblock %}

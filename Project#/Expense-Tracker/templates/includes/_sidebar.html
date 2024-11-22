@@ -1,0 +1,42 @@
+
+<div id="sidebar" class="flex flex-col w-64 bg-background text-white fixed h-full overflow-y-auto transition-transform duration-300 ease-in-out transform -translate-x-full md:translate-x-0 z-30">
+    <div class="flex items-center justify-center h-20 shadow-md bg-surface">
+        <h1 class="text-2xl font-semibold text-primary">Finance Tracker</h1>
+    </div>
+    <nav class="flex flex-col py-4">
+        <a href="/" class="flex items-center h-12 px-4 bg-opacity-0 hover:bg-opacity-10 bg-primary text-gray-300 hover:text-white transition-colors duration-200">
+            <span class="inline-flex items-center justify-center h-12 w-12 text-lg text-primary"><i class="fas fa-home"></i></span>
+            <span class="text-sm font-medium">Home</span>
+        </a>
+        <a href="/dashboard" class="flex items-center h-12 px-4 bg-opacity-0 hover:bg-opacity-10 bg-primary text-gray-300 hover:text-white transition-colors duration-200">
+            <span class="inline-flex items-center justify-center h-12 w-12 text-lg text-primary"><i class="fas fa-chart-bar"></i></span>
+            <span class="text-sm font-medium">Dashboard</span>
+        </a>
+        <a href="/addTransactions" class="flex items-center h-12 px-4 bg-opacity-0 hover:bg-opacity-10 bg-primary text-gray-300 hover:text-white transition-colors duration-200">
+            <span class="inline-flex items-center justify-center h-12 w-12 text-lg text-primary"><i class="fas fa-plus-circle"></i></span>
+            <span class="text-sm font-medium">Add Transactions</span>
+        </a>
+        <a href="/transactionHistory" class="flex items-center h-12 px-4 bg-opacity-0 hover:bg-opacity-10 bg-primary text-gray-300 hover:text-white transition-colors duration-200">
+            <span class="inline-flex items-center justify-center h-12 w-12 text-lg text-primary"><i class="fas fa-history"></i></span>
+            <span class="text-sm font-medium">Transaction History</span>
+        </a>
+        <a href="/track_budget" class="flex items-center h-12 px-4 bg-opacity-0 hover:bg-opacity-10 bg-primary text-gray-300 hover:text-white transition-colors duration-200">
+            <span class="inline-flex items-center justify-center h-12 w-12 text-lg text-primary"><i class="fas fa-wallet"></i></span>
+            <span class="text-sm font-medium">Track Budget</span>
+        </a>
+    </nav>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const currentPath = window.location.pathname;
+        const sidebarLinks = document.querySelectorAll('#sidebar a');
+        
+        sidebarLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('bg-opacity-10', 'text-white');
+                link.classList.remove('text-gray-300');
+            }
+        });
+    });
+</script>

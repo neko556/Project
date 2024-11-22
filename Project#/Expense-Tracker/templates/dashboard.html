@@ -1,0 +1,210 @@
+{% extends 'layout.html' %}
+{% block body %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .dashboard {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .chart {
+            margin-bottom: 30px;
+        }
+
+        .heatmap-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+
+        .heatmap-header {
+            display: grid;
+            grid-template-columns: 30px repeat(7, 20px);
+            gap: 2px;
+            margin-bottom: 5px;
+        }
+
+        .heatmap-header div {
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .heatmap {
+            display: grid;
+            grid-template-columns: 30px repeat(7, 20px);
+            gap: 2px;
+        }
+
+        .heatmap div {
+            width: 20px;
+            height: 20px;
+            background-color: #e0f7df; /* Default light green */
+            border: 1px solid #ddd;
+        }
+
+        .heatmap .week-label {
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .heatmap .low {
+            background-color: #a5d6a7; /* Light green */
+        }
+
+        .heatmap .medium {
+            background-color: #66bb6a; /* Medium green */
+        }
+
+        .heatmap .high {
+            background-color: #388e3c; /* Dark green */
+        }
+    </style>
+
+    <div class="dashboard">
+        <h1>Financial Dashboard</h1>
+
+        <div id="financial-summary">
+            <h2>Financial Summary</h2>
+            <p>Total Spending: ₹{{ '%.2f'|format(financial_summary.total_spending|float) }}</p>
+        </div>
+
+        <div class="chart">
+            <h2>Daily Spending (Last 30 Days)</h2>
+            <canvas id="daily-spending-chart"></canvas>
+        </div>
+
+        <div class="chart">
+            <h2>Category-wise Spending</h2>
+            <canvas id="category-spending-chart"></canvas>
+        </div>
+
+        <div class="chart">
+            <h2>Spending Heat Map (Last 30 Days)</h2>
+            <div class="heatmap-container">
+                <!-- Heatmap header for days -->
+                <div class="heatmap-header">
+                    <div></div>
+                    <div>1</div>
+                    <div>2</div>
+                    <div>3</div>
+                    <div>4</div>
+                    <div>5</div>
+                    <div>6</div>
+                    <div>7</div>
+                </div>
+
+                <!-- Heatmap grid -->
+                <div class="heatmap" id="spending-heatmap">
+                    <!-- Dynamic heatmap content -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Generate heatmap dynamically
+        const spendingData = {{ daily_spending|tojson }};
+        const heatmap = document.getElementById('spending-heatmap');
+
+        // Create rows for 4 weeks
+        for (let week = 1; week <= 4; week++) {
+            // Week label
+            const weekLabel = document.createElement('div');
+            weekLabel.className = 'week-label';
+            weekLabel.textContent = `W${week}`;
+            heatmap.appendChild(weekLabel);
+
+            // Create 7 days for each week
+            for (let day = 1; day <= 7; day++) {
+                const index = (week - 1) * 7 + (day - 1);
+                const square = document.createElement('div');
+                if (index < spendingData.length) {
+                    const amount = parseFloat(spendingData[index].amount);
+
+                    // Assign color class based on spending
+                    if (amount < 100) {
+                        square.className = 'low';
+                    } else if (amount < 500) {
+                        square.className = 'medium';
+                    } else {
+                        square.className = 'high';
+                    }
+                }
+                heatmap.appendChild(square);
+            }
+        }
+
+        // Daily Spending Chart
+        const dailySpendingCtx = document.getElementById('daily-spending-chart').getContext('2d');
+        new Chart(dailySpendingCtx, {
+            type: 'line',
+            data: {
+                labels: spendingData.map(item => item.date),
+                datasets: [{
+                    label: 'Daily Spending',
+                    data: spendingData.map(item => item.amount),
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        ticks: {
+                            callback: function (value, index) {
+                                const date = new Date(this.getLabelForValue(value));
+                                return `${date.getDate()}/${date.getMonth() + 1}`;
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Category Spending Chart
+        const categorySpendingData = {{ category_spending|tojson }};
+        const categorySpendingCtx = document.getElementById('category-spending-chart').getContext('2d');
+        new Chart(categorySpendingCtx, {
+            type: 'pie',
+            data: {
+                labels: categorySpendingData.map(item => item.category),
+                datasets: [{
+                    data: categorySpendingData.map(item => item.amount),
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(153, 102, 255)',
+                        'rgb(255, 159, 64)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Category-wise Spending'
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}
